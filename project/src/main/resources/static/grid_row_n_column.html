@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>AX5UI - Row &amp; Column</title>
+
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-kernel/master/dist/ax5ui.all.css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-kernel/master/dist/ax5ui.all.min.js"></script>
+ -->
+
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+	/* dash(-)로 구분되는 날짜 포맷터 */
+	ax5.ui.grid.formatter["date"] = function() {
+		var date = this.value;
+		if(date.length == 8) {
+			return date.substr(0, 4) + "-" + date.substr(4, 2) + "-" + date.substr(6);
+		} else {
+			return date;
+		}
+	}
+
+	/* 그리드 객체 생성 */
+	var firstGrid = new ax5.ui.grid();
+
+	/* 그리드 설정 지정 */
+	firstGrid.setConfig({
+	    target: $('[data-ax5grid="first-grid"]'),
+
+      showLineNumber: false,
+      showRowSelector: true,
+      multipleSelect: false,
+      lineNumberColumnWidth: 40,
+      rowSelectorColumnWidth: 27,
+      sortable: true,
+
+	    columns: [
+            {key: "date", label: "날짜", formatter: "date", align: "center"},
+            {key: "type", label: "구분", align: "center"},
+            {key: "amount", label: "<strong>주유량</strong>", align: "center"},
+            {key: "mileage", label: "주행거리(km)", align: "center"},
+            {key: "price", label: "금액(원)", formatter: "money", align: "center"},
+            {key: "repair", label: "정비내역", align: "center"},
+            {key: "note", label: "비고", align: "center"}
+	    ]
+	});
+
+    /* 테스트용 데이터 생성 */
+    var list = [];
+    for (var i = 0; i < 8; i++) {
+        list.push({date: "20170101", type: "주유", amount: 25, mileage: (i + 1) * 100, price: 45000, repair: "-", note: "-"});
+    }
+
+    /* 그리드에 데이터 설정 */
+    firstGrid.setData(list);
+
+    /* 버튼 이벤트 핸들러 */
+    $('[data-grid-control]').click(function () {
+        switch (this.getAttribute("data-grid-control")) {
+            case "row-add":
+            	firstGrid.addRow($.extend({}, firstGrid.list[Math.floor(Math.random() * firstGrid.list.length)], {__index: undefined}));
+                //firstGrid.addRow($.extend({}, firstGrid.list[Math.floor(Math.random() * firstGrid.list.length)], true), 1);
+                break;
+            case "row-remove":
+                firstGrid.removeRow(1);
+                break;
+            case "row-update":
+                var updateIndex = Math.floor(Math.random() * firstGrid.list.length);
+                firstGrid.updateRow($.extend({}, firstGrid.list[updateIndex], {amount: 30, mileage: 1230, price: 25000}), updateIndex);
+                break;
+            case "column-add":
+                firstGrid.addColumn({key: "b", label: "필드B"}, "first");
+                break;
+            case "column-remove":
+                firstGrid.removeColumn();
+                break;
+            case "column-update":
+                firstGrid.updateColumn({key: "b", label: "필드B"}, 0);
+                break;
+        }
+    });
+});
+</script>
+</head>
+
+<body>
+
+<div data-ax5grid="first-grid" data-ax5grid-config="{}" style="width:100%; height:300px;"></div>
+
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-grid-control="row-add">행 추가</button>
+    <button class="btn btn-default" data-grid-control="row-remove">행 삭제</button>
+    <button class="btn btn-default" data-grid-control="row-update">행 업데이트</button>
+</div>
+
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-grid-control="column-add">열 추가</button>
+    <button class="btn btn-default" data-grid-control="column-remove">열 삭제</button>
+    <button class="btn btn-default" data-grid-control="column-update">열 수정</button>
+</div>
+
+</body>
+</html>

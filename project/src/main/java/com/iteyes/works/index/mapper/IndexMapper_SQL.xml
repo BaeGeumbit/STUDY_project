@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.iteyes.works.index.mapper.IndexMapper">
+
+	<select id="selectTopInfo" resultType="java.util.HashMap">
+		SELECT EMP_NO    AS "emp_no"
+		     , EMP_NAME  AS "emp_name"
+		  FROM STE100I
+		 WHERE EMP_NO        =  #{id}
+	</select>
+
+</mapper>

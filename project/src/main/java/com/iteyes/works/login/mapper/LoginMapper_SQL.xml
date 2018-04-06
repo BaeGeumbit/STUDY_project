@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iteyes.works.login.mapper.LoginMapper">
+
+	<!-- 로그인권한조회 -->
+    <select id="selectLogin" resultType="int">
+		SELECT STATUS      
+		  FROM (
+		       SELECT 1 STATUS FROM STE100I WHERE EMP_NO = #{id} AND PWD_NO = #{passwd}    
+		       UNION 
+		       SELECT 2 STATUS FROM STE100I WHERE EMP_NO = #{id}                 
+		       UNION 
+		       SELECT 3 STATUS FROM DUAL                                      
+		        )
+		 WHERE ROWNUM = 1	
+    </select>
+    
+    <select id="selectSessionInfo" resultType="HashMap">
+    	SELECT EMP_NO
+    	     , EMP_NAME
+    	     , AUTH_CLS_CODE
+    	  FROM STE100I
+    	 WHERE EMP_NO = #{emp_no}
+    </select>
+    
+</mapper>

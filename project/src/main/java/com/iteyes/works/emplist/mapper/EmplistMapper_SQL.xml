@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.iteyes.works.emplist.mapper.EmplistMapper">
+
+	<select id="getEmpList" resultType="HashMap"> 
+		<![CDATA[
+		WITH T AS(
+SELECT RWNUM
+		     , EMP_NO
+		     , EMP_NAME
+		     , COMP_EMAIL
+		     , CNTCT_NO
+		     , EMP_STTS_NAME
+		     , RNK_NAME
+		  FROM (SELECT ROW_NUMBER() OVER(
+		                 ORDER BY TO_NUMBER(E.EMP_NO),E.EMP_NAME, E.JOIN_DATE ASC) AS RWNUM
+		             , E.EMP_NO AS EMP_NO 										 /*사원번호*/
+		             , E.EMP_NAME AS EMP_NAME 									 /*사원명*/
+		             , E.COMP_EMAIL AS COMP_EMAIL 								 /*이메일*/
+		             , E.CNTCT_NO AS CNTCT_NO 									 /*연락처*/
+		             , (SELECT C2.CODE_NAME
+		                  FROM STC002C C2
+		                 WHERE CODE_GRP_ID = 'EMP_STTS_CODE'
+		                   AND E.EMP_STTS_CODE = C2.CODE_ID ) AS EMP_STTS_NAME 	 /*상태*/
+		             , (SELECT C2.CODE_NAME
+		                  FROM STC002C C2
+		                 WHERE CODE_GRP_ID = 'RNK_CODE'
+		                   AND E.RNK_CODE = C2.CODE_ID ) AS RNK_NAME 			 /*직급*/
+		            
+		          FROM STE100I E
+		         WHERE 1 = 1
+		           
+		           )
+		 WHERE 1 = 1
+		   AND RWNUM BETWEEN ((#{page}-1)*#{row})+1 AND #{page}*#{row}
+       )
+       SELECT T.*
+       , (SELECT WM_CONCAT(D.DPT_NAME)
+		                  FROM STC003I D
+                       , STE101I P
+		                 WHERE 1 = 1
+		                   AND D.DPT_CODE = P.DPT_CODE
+		                   AND D.APLY_STRT_DATE = P.APLY_STRT_DATE
+                       AND P.EMP_NO = T.EMP_NO
+                       ) AS DPT_NAME /*부서*/
+       FROM T
+		  
+		 ]]>  
+	</select>
+	
+	<select id="getListCount" resultType="int">
+		SELECT COUNT(ROWNUM)  	/*전체 ROW 개수*/
+		  FROM STE100I	                              			
+	</select>
+		
+		
+	<select id="getEmpSearchList" resultType="HashMap">
+		SELECT * FROM (
+		SELECT DROPDOWN
+		     , ROW_NUMBER() OVER(
+		                 ORDER BY TO_NUMBER(EMP_NO),EMP_NAME ASC) AS RWNUM
+		     , EMP_NO
+		     , EMP_NAME
+		     , COMP_EMAIL
+		     , CNTCT_NO
+		     , EMP_STTS_NAME
+		     , RNK_NAME
+		     , DPT_NAME
+		     , COUNT(1) OVER() AS TOTAL_CNT
+		  FROM (SELECT #{searchDrop} AS DROPDOWN
+		             , E.EMP_NO AS EMP_NO 										 /*사원번호*/
+		             , E.EMP_NAME AS EMP_NAME 									 /*사원명*/
+		             , E.COMP_EMAIL AS COMP_EMAIL 								 /*이메일*/
+		             , E.CNTCT_NO AS CNTCT_NO 									 /*연락처*/
+		             , (SELECT C2.CODE_NAME
+		                  FROM STC002C C2
+		                 WHERE CODE_GRP_ID = 'EMP_STTS_CODE'
+		                   AND E.EMP_STTS_CODE = C2.CODE_ID ) AS EMP_STTS_NAME 	 /*상태*/
+		             , (SELECT C2.CODE_NAME
+		                  FROM STC002C C2
+		                 WHERE CODE_GRP_ID = 'RNK_CODE'
+		                   AND E.RNK_CODE = C2.CODE_ID ) AS RNK_NAME 			 /*직급*/
+		             , (SELECT D.DPT_NAME
+		                  FROM STC003I D
+		                 WHERE 1 = 1
+		                   AND D.DPT_CODE = P.DPT_CODE
+		                   AND D.APLY_STRT_DATE = P.APLY_STRT_DATE ) AS DPT_NAME /*부서*/
+		          FROM STE100I E
+		             , STE101I P
+		         WHERE 1 = 1
+		           AND E.EMP_NO = P.EMP_NO(+) 		           
+		           )
+		 WHERE 1 = 1	
+		<if test = ' searchDrop.equals("EMP_NAME") '>	   
+		   AND EMP_NAME LIKE '%' || #{searchText} || '%'
+		</if>
+		<if test = ' searchDrop.equals("DPT_NAME") '>	   
+		   AND DPT_NAME LIKE '%' || #{searchText} || '%'
+		</if>
+		<if test = ' searchDrop.equals("JOIN_DATE") '>	   
+		   AND JOIN_DATE LIKE '%' || #{searchText} || '%'
+		</if>
+		) WHERE 1 = 1
+		   AND RWNUM BETWEEN ((#{page}-1)*#{row})+1 AND #{page}*#{row}
+		
+	</select>
+</mapper>
+
+

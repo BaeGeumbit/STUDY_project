@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+           
+<mapper namespace="com.iteyes.works.empinfo.mapper.UpdateEmpinfoMapper">
+
+	<update id="updateBasic">
+	   UPDATE STE100I
+         SET EMP_NAME = #{emp_name}
+           , AUTH_CLS_CODE = #{auth_cls_code}
+           , EMP_STTS_CODE = #{emp_stts_code}
+          <if test = ' ! join_date.equals("") '>	   
+		   , JOIN_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{join_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		  </if>
+		  <if test = ' join_date.equals("") '>	   
+		   , JOIN_DATE = #{join_date}
+		  </if>
+		  <if test = ' ! rsgn_date.equals("") '>	   
+		   , RSGN_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{rsgn_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		  </if>
+		  <if test = ' rsgn_date.equals("") '>	   
+		   , RSGN_DATE = #{rsgn_date}
+		  </if>
+           , RNK_CODE = #{rnk_code}
+           , CNTCT_NO = #{cntct_no}
+           , COMP_EMAIL = #{comp_email}
+           , EMP_ENG_NAME = #{emp_eng_name}
+           , EMP_CHN_NAME = #{emp_chn_name}
+           <if test = ' ! brth_date.equals("") '>	   
+		   , BRTH_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{brth_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		  </if>
+		  <if test = ' brth_date.equals("") '>	   
+		   , BRTH_DATE = #{brth_date}
+		  </if>
+           , GNDR_CODE = #{gndr_code}
+           , RSDN_REG_NO = #{rsdn_reg_no}
+           , ZIP_CODE = #{zip_code}
+           , HOME_ADDR = #{home_addr}
+           , HOME_DTL_NO = #{home_dtl_no}
+           , PSNL_EMAIL = #{psnl_email}
+           , EMRG_CNTCT_NO = #{emrg_cntct_no}
+           , MSVC_CLS_CODE = #{msvc_cls_code}
+           <if test = ' ! msvc_strt_date.equals("") '>	   
+		   , MSVC_STRT_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{msvc_strt_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		   </if>
+		   <if test = ' msvc_strt_date.equals("") '>	   
+		   , MSVC_STRT_DATE = #{msvc_strt_date}
+		   </if>
+		   <if test = ' ! msvc_end_date.equals("") '>	   
+		   , MSVC_END_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{msvc_end_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		   </if>
+		   <if test = ' msvc_end_date.equals("") '>	   
+		   , MSVC_END_DATE = #{msvc_end_date}
+		   </if>
+           , MRRG_YN = #{mrrg_yn}
+           <if test = ' ! mrrg_date.equals("") '>	   
+		   , MRRG_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{mrrg_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		   </if>
+		   <if test = ' mrrg_date.equals("") '>	   
+		   , MRRG_DATE = #{mrrg_date}
+		   </if>
+           , PROC_EMP_NO = #{proc_emp_no}
+           , PROC_DT = SYSDATE
+      WHERE EMP_NO = #{emp_no}
+	</update>
+	
+	<select id="getEdu" resultType="String">
+		SELECT EMP_ACCR_NO     
+		  FROM STE102I
+		 WHERE EMP_NO = #{emp_no}
+	</select>
+	
+	<delete id="delEdu">
+		DELETE 
+		  FROM STE102I
+		 WHERE EMP_NO = #{emp_no}
+		   AND EMP_ACCR_NO = #{emp_accr_no} 
+	</delete>
+	
+	<update id="updateEdu">
+		UPDATE STE102I 
+		   SET SCHL_NAME = #{schl_name}
+             <if test = ' ! entr_date.equals("") '>	   
+		     , ENTR_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{entr_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		     </if>
+		     <if test = ' entr_date.equals("") '>	   
+		     , ENTR_DATE = #{entr_date}
+		     </if>
+		     <if test = ' ! grdn_date.equals("") '>	   
+		     , GRDN_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{grdn_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		     </if>
+		     <if test = ' grdn_date.equals("") '>	   
+		     , GRDN_DATE = #{grdn_date}
+		     </if>
+             , MAJR_NAME = #{majr_name}
+             , GRDN_CLS_CODE = #{grdn_cls_code}
+             , DEGR_CLS_CODE = #{degr_cls_code}
+             , GRAD_VAL01 = TO_NUMBER(#{grad_val01})
+             , GRAD_VAL02 = TO_NUMBER(#{grad_val02})
+             , PROC_EMP_NO = '2'
+             , PROC_DT = SYSDATE
+		 WHERE EMP_NO = #{emp_no}
+		   AND EMP_ACCR_NO = TO_NUMBER(#{emp_accr_no})
+	</update>
+	
+	
+	<insert id="insertEdu">
+		INSERT INTO STE102I
+		VALUES ( 
+		       #{emp_no}
+		     , TO_NUMBER(#{emp_accr_no})
+		     , #{schl_name}
+		     <if test = ' ! entr_date.equals("") '>	   
+		     , (TO_CHAR(TO_DATE(TO_DATE(#{entr_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		     </if>
+		     <if test = ' entr_date.equals("") '>	   
+		     , #{entr_date}
+		     </if>
+		     <if test = ' ! grdn_date.equals("") '>	   
+		     , (TO_CHAR(TO_DATE(TO_DATE(#{grdn_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		     </if>
+		     <if test = ' grdn_date.equals("") '>	   
+		     , #{grdn_date}
+		     </if>
+		     , #{majr_name}
+		     , #{grdn_cls_code}
+		     , #{degr_cls_code}
+		     , #{grad_val01}
+		     , #{grad_val02}
+		     , #{reg_emp_no}
+		     , SYSDATE 
+		     , #{proc_emp_no}
+		     , SYSDATE 
+		     )		    
+	</insert>
+
+	<select id="getCareer" resultType="String">
+		SELECT EMP_CARR_NO        
+		  FROM STE103I
+		 WHERE EMP_NO = #{emp_no}
+	</select>
+	             
+
+	<update id="updateCareer">
+		UPDATE STE103I 
+		   SET OFFC_NAME = #{offc_name}
+             , WRK_CLS_CODE = #{wrk_cls_code} 
+           <if test = ' ! wrk_strt_date.equals("") '>	   
+		   , WRK_STRT_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{wrk_strt_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		   </if>
+		   <if test = ' wrk_strt_date.equals("") '>	   
+		   , WRK_STRT_DATE = #{wrk_strt_date}
+		   </if>
+		   <if test = ' ! wrk_end_date.equals("") '>	   
+		   , WRK_END_DATE = (TO_CHAR(TO_DATE(TO_DATE(#{wrk_end_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		   </if>
+		   <if test = ' wrk_end_date.equals("") '>	   
+		   , WRK_END_DATE = #{wrk_end_date}
+		   </if>
+             , WRK_DPT_NAME = #{wrk_dpt_name}
+             , CHRG_TSK_CNTT = #{chrg_tsk_cntt}
+             , RSGN_RESN_CNTT = #{rsgn_resn_cntt}
+             , PROC_EMP_NO = #{proc_emp_no}
+             , PROC_DT = SYSDATE 
+		 WHERE EMP_NO = #{emp_no}
+		   AND EMP_CARR_NO = TO_NUMBER(#{emp_carr_no})
+	</update>
+	
+	
+	<insert id="insertCareer">
+		INSERT INTO STE103I
+		VALUES ( 
+		        #{emp_no}
+			  , TO_NUMBER(#{emp_carr_no})
+			  , #{offc_name}
+			  , #{wrk_cls_code}
+			  <if test = ' ! wrk_strt_date.equals("") '>	   
+		      , (TO_CHAR(TO_DATE(TO_DATE(#{wrk_strt_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		      </if>
+		      <if test = ' wrk_strt_date.equals("") '>	   
+		      , #{wrk_strt_date}
+		      </if>
+		      <if test = ' ! wrk_end_date.equals("") '>	   
+		      , (TO_CHAR(TO_DATE(TO_DATE(#{wrk_end_date},'YYYY-MM-DD')),'YYYYMMDD'))
+		      </if>
+		      <if test = ' wrk_end_date.equals("") '>	   
+		      , #{wrk_end_date}
+		      </if>
+			  , #{wrk_dpt_name}
+			  , #{chrg_tsk_cntt}
+			  , #{rsgn_resn_cntt}
+			  , #{reg_emp_no}
+			  , SYSDATE
+			  , #{proc_emp_no}
+			  , SYSDATE
+		     )		    
+	</insert>
+	
+	<delete id="delCareer">
+		DELETE 
+		  FROM STE103I
+		 WHERE EMP_NO = #{emp_no}
+		   AND EMP_CARR_NO = #{emp_carr_no} 
+	</delete>
+	
+	<select id="getEmpDpt" resultType="String">
+		SELECT C.DPT_NAME
+		  FROM STC003I C
+		     , STE101I I   
+		WHERE I.EMP_NO = #{emp_no}
+		  AND C.APLY_STRT_DATE = I.APLY_STRT_DATE
+		  AND C.DPT_CODE = I.DPT_CODE
+	</select>
+	
+	<select id="getDetailDpt" resultType="HashMap">
+		SELECT DPT_CODE      	   
+             , APLY_STRT_DATE   
+             , APLY_END_DATE   
+             , DPT_NAME
+        FROM STC003I   
+       WHERE DPT_NAME = #{dpt_name}
+         AND TO_CHAR(SYSDATE, 'YYYYMMDD') 
+     BETWEEN APLY_STRT_DATE 
+         AND APLY_END_DATE
+	</select>
+
+	<select id="getDpt" resultType="HashMap">
+		SELECT DPT_CODE			
+		     , APLY_STRT_DATE	
+		     , APLY_END_DATE	
+          FROM STC003I
+         WHERE DPT_NAME = #{dpt_name}
+           AND TO_CHAR(SYSDATE,'YYYYMMDD')
+       BETWEEN APLY_STRT_DATE 
+           AND APLY_END_DATE 
+	</select>
+
+
+	<insert id="insertDpt">
+		INSERT INTO STE101I
+		VALUES ( 
+		        #{emp_no}
+			  , #{dpt_code}
+		      , #{aply_strt_date}   
+		      , #{aply_end_date}
+			  , #{dpt_role_cls_code}
+			  , #{reg_emp_no}
+			  , SYSDATE
+			  , #{proc_emp_no}
+			  , SYSDATE
+		     )		
+	</insert>
+	
+	<delete id="delDpt">
+			DELETE
+	  FROM STE101I
+	 WHERE EMP_NO = #{emp_no}
+	   AND DPT_CODE = (SELECT DPT_CODE
+	          FROM STC003I
+	         WHERE 1 = 1
+	           AND DPT_NAME = #{dpt_name}
+	           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLY_STRT_DATE AND APLY_END_DATE )
+	</delete>
+
+	<update id="updateDpt">
+		UPDATE STE101I 
+		   SET APLY_STRT_DATE = #{aply_strt_date}  
+		     , APLY_END_DATE = #{aply_end_date}
+             , DPT_ROLE_CLS_CODE = #{dpt_role_cls_code}
+             , PROC_EMP_NO = #{proc_emp_no}
+             , PROC_DT = SYSDATE
+		 WHERE EMP_NO = #{emp_no}
+		   AND DPT_CODE = #{dpt_code}
+	</update>
+	
+</mapper>
+
+
+
+
+
+

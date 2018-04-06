@@ -1,0 +1,426 @@
+/**
+*	CUSTOM DESIGNED BY GEUM-BIT
+*/
+
+@charset "UTF-8";
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+
+
+* {
+    font-family: 'Nanum Gothic', sans-serif;
+}     
+
+html
+, body{
+	height:93%;
+	background-color : #F6F6F6;
+}
+
+/************************
+	header.jsp
+*************************/
+
+
+.top{
+	background-color: #6799FF;
+	height: 60px;
+	border-radius: 10px 10px 0px 0px
+}
+
+.left{
+	background-color:#EAEAEA;
+	height:100%;
+	border : 0px solid;
+}
+
+.left > ul{
+	list-style:none;
+	margin-top:40px;
+    padding-left:0px;
+}
+
+.left > ul > li{
+	padding : 10px 0px 0px 0px;
+	margin-bottom : 10px;
+	
+}
+.left > ul > li:hover{
+/* 	background-color : #BDBDBD; */
+	cursor:pointer;
+	border-bottom : 1px solid #A6A6A6;	
+}
+.left > ul > li > a{
+	font-weight: bold;	
+	font-size : 15px; 
+	color : #7A7A7A;
+}
+
+.left > ul > li > a:hover{
+	text-decoration : none;
+}
+
+.top-brand{
+	margin-top : 10px;
+}
+
+.iteyes{		
+ 	color : white;
+	font-family: 'Titillium Web', sans-serif;
+	font-size : 30px;
+	font-weight : bold;
+}
+
+.iteyes:hover{
+	color:#A6A6A6;
+	text-decoration : none;
+}
+
+.iteyes:link
+, .iteyes:active
+, .iteyes:visited{
+	color : white;
+	text-decoration : none;
+}
+
+.top-info{
+	color : #5D5D5D;
+	font-size : 13px;
+	font-weight:bold;
+	margin-top : 25px;
+}
+
+.logout{
+	color : #747474;
+	font-size : 13px;
+	font-weight : bold;
+	margin-top : 23px;
+}
+
+
+/************************
+	index.jsp
+*************************/
+
+.index{
+	margin : 15px 30px 15px 30px;
+	height:100%;
+}
+
+.right{
+	background-color:white;
+    height: expression( this.scrollHeight > 99 ? "100%" : "auto" );
+    max-height: 100%;
+    min-height: 100%;
+    border: 0px solid #666;
+    overflow-y: auto;     
+}
+
+
+/************************
+	emplist.jsp
+*************************/
+
+.list-table > tbody tr:hover{
+	background-color : #D5D5D5;
+	cursor:pointer;	
+}
+
+.pager > li > a{
+	font-size : 13px;
+	margin-left: 5px;
+}
+
+.list-text{
+	margin-top : 20px;
+	padding-left :32%;
+}
+
+.list-text input[type='text']{
+	width : 250px;
+	float : left;
+	margin-right : 5px;
+}
+.list-text > button{
+	font-size : 20px;
+	width : 50px;
+}
+
+.list-text > .dropdown{
+	float : left;
+	margin-right : 10px;
+	
+}
+.list-text > .dropdown > button{
+	font-size : 13px;
+	background-color : #4374D9;
+}
+
+.list-text > .dropdown > ul > li > a {
+	font-size : 13px;
+}
+
+#selectSearch li a:hover{
+	cursor : pointer;
+}
+
+
+/************************
+	empinfo.jsp
+*************************/
+
+#imgupload-bt{
+	font-size : 12px;
+	margin-left : 33%;
+	
+}
+
+.emp-photo{
+/* 			width : 300px; */
+	padding : 10px 0px 10px 0px;
+}
+
+.empinfo h1{
+	text-align : center;
+	margin : 7% 0 7% 0;
+	font-family: 'Jeju Gothic', serif;
+	color : #002266;
+}
+
+.empinfo .input-group .input-group-addon{
+	text-align : center;			
+	font-size : 12px;
+	width : 100px;			
+}
+
+.empinfo .input-group .form-control{
+	text-align : center;
+	font-weight : bold;
+	background-color : white;	
+}
+
+.empinfo .col-xs-8
+, .empinfo .col-xs-4
+, .empinfo .col-xs-2{
+	margin-top : 5px;
+}
+
+.empinfo .emp_no .form-control{
+	width : 207%; 
+		
+}
+.empinfo .emp_no .input-group{
+/* 			margin-left : 10%; */
+	float : left; 
+}
+
+.empinfo .emp_name .input-group
+, .empinfo .emp_stts_name .input-group
+, .empinfo .emp_start_date .input-group
+, .empinfo .emp_end_date .input-group
+, .empinfo .emp_email .input-group
+, .empinfo .emp_tel .input-group
+, .empinfo .emp_dpt_name .input-group{
+	margin-top : 13px;
+}
+
+.empinfo #emp_check{
+	margin-left : 36%;
+	font-size : 14px;	
+}
+
+.empinfo #emp_check input[type='checkbox']{
+	width: 15px;  
+	height: 15px;
+	margin-left : 10px;
+	align : center;
+	margin-top : 10px;
+}
+
+
+.info-table{
+	margin-top : 5%;
+	text-align : center;
+	
+}
+
+.info-table table{
+	border-radius : 0px 15px 15px 15px;
+}
+
+.info-table th{
+	font-size : 12px;
+	background-color : #EAEAEA;
+	font-weight : normal;
+	width : 10%;
+	text-align : center;
+	vertical-align: middle;
+	
+}
+.info-table td{
+	font-size : 13px;
+}
+
+.info-table .name{
+	width : 10%;
+}
+
+.info-table .title{
+	text-align : left;
+	border : 1px solid #A6A6A6;
+	background-color : #6B66FF;
+/* 			font-weight : bold; */
+	border-radius : 10px 10px 0px 0px;
+	width : 10.1%;
+	padding :0.5% 0% 1% 2%;
+	color : white;
+	font-size : 13px;
+}
+
+
+
+.basictext
+, .edutext
+, .worktext{
+	border : 0px solid white;
+}
+
+.radio-div{
+	margin-left : 15%;
+	text-align:center; 
+}
+
+.info-radio{
+	float : left;
+		margin : auto;
+		margin-left : 10%;
+}
+
+.info-radio label{
+	font-weight : normal;
+	font-size : 12px;
+	padding-bottom : 3px;
+}
+
+.info-radioinput[type='radio']{
+	
+}
+
+#infofrm input[type='date']{
+	text-align : right;
+/* 			font-size: 12px; */
+}
+
+.info-table input[type='text']{
+	text-align : center;
+}
+
+.info-sel{
+	width : 70px;
+	height : 30px;
+	margin-left : 5%;
+	
+	font-size : 12px;
+}
+
+.info-sel option{
+	text-align : right;
+	font-size : 12px;
+}
+
+
+
+/************************
+	address.jsp
+*************************/
+
+
+.addr-top{
+	height : 30px;
+	background-color : #6799FF;
+	color : white;
+	font-size : 15px;
+	text-align : right;
+	padding : 20px 20px 40px 20px;
+	margin-bottom : 40px;
+}
+.searchAddr{
+	float : left;
+	width : 85%;
+}
+
+.addr button{
+	height : 34px;
+	width : 15%;
+}
+
+.addr hr{
+	color : #353535;
+	
+}
+
+.addr .search{
+	margin-bottom : 70px;
+}
+.addr-result{
+	
+}
+.addr-result thead{
+	border : 0px solid;
+/* 	background-color : #FFE08C; */
+	font-weight : regular;		
+	font-size : 12px;
+	color : #747474;
+}
+
+.addr-result thead tr{
+	border-radius: 10px 10px 0px 0px;
+}
+.addr-result tbody th{
+	text-align : center;
+}
+.addr-result tbody{
+	font-size : 11px;
+}
+.addr-result th{
+	font-size : 10px;
+}
+
+.addr-bt{
+	font-size : 10px;
+	width : 100%;
+}	
+
+
+/************************
+	dpt.jsp
+*************************/
+
+
+.dpt-info a{
+	font-size : 15px;
+	
+	padding-bottom : 5px;
+	text-decoration : none;
+	color : #4C4C4C;
+}
+.dpt-info a:hover{
+	text-decoration : none;
+	color : #4C4C4C;
+}
+.dpt-info ul{
+	list-style : none;
+}
+
+.dpt-info li{
+	list-style : none;
+		margin : 7px; 
+}
+#selectStatus{
+	float : left;
+}
+#searchText{
+	width : 50%;
+	float : left;
+}
+		

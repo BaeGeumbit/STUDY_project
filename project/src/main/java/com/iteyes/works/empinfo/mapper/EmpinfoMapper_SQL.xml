@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+        
+<mapper namespace="com.iteyes.works.empinfo.mapper.EmpinfoMapper">
+
+	<select id="getNewEmpNo" resultType="String">
+		SELECT TO_CHAR(MAX(TO_NUMBER(EMP_NO)+1))
+		  FROM STE100I
+	</select>
+
+	<select id="getEmpBasicinfo" resultType="HashMap">
+		SELECT EMP_NO              								   			    						
+		     , EMP_NAME            													
+		     , AUTH_CLS_CODE     												 
+		     , EMP_STTS_CODE    							 
+		     , NVL(TO_CHAR(TO_DATE(JOIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD'),'9999-12-31') AS JOIN_DATE     
+		     , NVL(TO_CHAR(TO_DATE(RSGN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD'),'9999-12-31') AS RSGN_DATE     
+		     , RNK_CODE        								
+             , ( SELECT MIN(I.DPT_ROLE_CLS_CODE)
+                   FROM STE101I I
+                  WHERE 1 = 1
+                    AND I.EMP_NO = E.EMP_NO       
+             	)  AS DPT_ROLE_CLS_CODE  																
+             ,  ( SELECT WM_CONCAT(P.DPT_NAME)
+                   FROM STE101I D, STC003I P
+                  WHERE 1 = 1
+                    AND E.EMP_NO = D.EMP_NO
+                    AND D.DPT_CODE = P.DPT_CODE
+                    AND D.APLY_STRT_DATE = P.APLY_STRT_DATE)  AS DPT_NAME       					       	    
+		     , COMP_EMAIL               								    		
+		     , CNTCT_NO                 								 					     
+		     , EMP_ENG_NAME              							     		
+		     , EMP_CHN_NAME               								  		
+		     , RSDN_REG_NO                							   			
+		     , BRTH_DATE                								   			
+		     , GNDR_CODE							   			
+		     , GNDR_CODE							   					     
+		     , ZIP_CODE                  											
+		     , HOME_ADDR                  										
+		     , HOME_DTL_NO                 									
+		     , PSNL_EMAIL                  										
+		     , EMRG_CNTCT_NO           											
+		     , MSVC_CLS_CODE        						
+		     , MSVC_STRT_DATE        											
+		     , MSVC_END_DATE         											
+		     , MRRG_YN        									
+		     , MRRG_DATE         			 										
+         FROM STE100I E        
+		WHERE 1 = 1
+          AND EMP_NO = #{emp_no}
+	</select>
+	
+	
+	<select id="getEmpEducationinfo" resultType="HashMap">
+		 SELECT EMP_ACCR_NO	         			
+              , SCHL_NAME
+              , NVL(TO_CHAR(TO_DATE(ENTR_DATE,'YYYY-MM-DD'),'YYYY-MM-DD'),'9999-12-31') AS ENTR_DATE
+              , NVL(TO_CHAR(TO_DATE(GRDN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD'),'9999-12-31') AS GRDN_DATE
+              , MAJR_NAME
+              , GRDN_CLS_CODE
+              , DEGR_CLS_CODE		
+              , NVL(TO_CHAR(GRAD_VAL01)  ,'') AS GRAD_VAL01
+              , NVL(TO_CHAR(GRAD_VAL02)  ,'') AS GRAD_VAL02
+           FROM STE102I E
+    	  WHERE EMP_NO = #{emp_no} 
+    </select>
+	
+	
+	<select id="getEmpCareerinfo" resultType="HashMap">
+		SELECT EMP_CARR_NO
+             , OFFC_NAME
+             , WRK_CLS_CODE	
+             , NVL(TO_CHAR( TO_DATE(WRK_STRT_DATE,'YYYY-MM-DD'), 'YYYY-MM-DD' ),'0000-00-00') AS WRK_STRT_DATE
+             , NVL(TO_CHAR( TO_DATE(WRK_END_DATE,'YYYY-MM-DD'), 'YYYY-MM-DD' ),'0000-00-00') AS WRK_END_DATE
+             , WRK_DPT_NAME
+             , CHRG_TSK_CNTT
+             , RSGN_RESN_CNTT
+          FROM STE103I E
+         WHERE EMP_NO = #{emp_no}
+	</select>
+	
+	<select id="getGroupCode" resultType="HashMap">
+		SELECT CODE_GRP_ID
+		     , CODE_ID
+		     , CODE_NAME		     
+		  FROM STC002C
+	</select>
+	
+	<select id="getAddr" resultType="HashMap"> 
+		SELECT * FROM
+		(SELECT ZIP_CODE
+		     , PRVNC_ADDR||' '||CITY_ADDR||' '||ROAD_ADDR||' '||BLDG_MAIN_NO||' '||GU_BLDG_NAME||' ('||LEGL_DONG_NAME||')'
+		     AS ADDR
+		  FROM STC010I
+		)
+		WHERE ADDR LIKE '%' || #{searchAddr} || '%'
+        ORDER BY ZIP_CODE
+               , ADDR ASC
+	</select>
+	
+	<select id="getDpt" resultType="HashMap">
+		<![CDATA[
+		WITH T_STC003I AS (
+	    SELECT DPT_CODE                       /* 부서_코드 */
+	         , DPT_NAME                       /* 부서_명 */
+	         , DPT_CLS_CODE                   /* 부서_구분_코드 */
+	         , HRNK_DPT_CODE                  /* 상위_부서_코드 */
+	         , SORT_SEQ_NO                    /* 정렬_순번 */
+	         , LAST_LEVL_YN                   /* 최하위_레벨_여부 */
+	      FROM STUDY.STC003I
+	     WHERE APLY_STRT_DATE <= TO_CHAR(SYSDATE, 'YYYYMMDD')
+	       AND APLY_END_DATE  >  TO_CHAR(SYSDATE, 'YYYYMMDD')
+		), T_SRCH AS (
+		    SELECT DPT_CODE
+		      FROM T_STC003I
+		     WHERE 1 = 1
+		     AND (#{dpt_no} IS NULL OR (DPT_CODE = #{dpt_no}))
+		     AND (#{dpt_name} IS NULL OR (DPT_NAME LIKE '%' || #{dpt_name} || '%'))
+		), T_HRCH AS (
+		    SELECT *
+		      FROM T_STC003I
+		     WHERE DPT_CODE IN (SELECT DPT_CODE
+		                          FROM ( SELECT DPT_CODE
+		                                   FROM T_STC003I
+		                                CONNECT BY PRIOR DPT_CODE = HRNK_DPT_CODE
+		                                  START WITH DPT_CODE IN (SELECT DPT_CODE FROM T_SRCH)
+		                                  UNION ALL
+		                                 SELECT DPT_CODE
+		                                   FROM T_STC003I
+		                                CONNECT BY PRIOR HRNK_DPT_CODE = DPT_CODE
+		                                  START WITH DPT_CODE IN (SELECT DPT_CODE FROM T_SRCH)
+		                               )
+		                         GROUP BY DPT_CODE
+		                       )
+		)
+		 SELECT DPT_CODE                       /* 부서_코드 */
+		      , DPT_NAME                       /* 부서_명 */
+		      , LPAD (' ', (LEVEL - 1) * 8, ' ') || DPT_NAME AS DPT_NAME_EXT
+		      , DPT_CLS_CODE                   /* 부서_구분_코드 */
+		      , HRNK_DPT_CODE                  /* 상위_부서_코드 */
+		      , LEVEL AS LEVL_NO               /* 레벨_번호 */
+		      , SORT_SEQ_NO                    /* 정렬_순번 */
+		      , LAST_LEVL_YN                   /* 최하위_레벨_여부 */
+		   FROM T_HRCH
+		CONNECT BY PRIOR DPT_CODE = HRNK_DPT_CODE
+		  START WITH HRNK_DPT_CODE IS NULL
+		  ORDER SIBLINGS BY SORT_SEQ_NO
+		                  , DPT_CODE
+		]]>
+	</select>
+	
+	<select id="getEmpDptinfo" resultType="HashMap">
+		SELECT C.DPT_CODE
+		     , C.DPT_NAME
+		     , C.HRNK_DPT_CODE
+		     , C.DPT_CLS_CODE
+		  FROM STC003I C
+		     , STE101I I
+		 WHERE 1 = 1
+		   AND I.DPT_CODE = C.DPT_CODE
+		   AND I.APLY_STRT_DATE = C.APLY_STRT_DATE
+		   AND I.EMP_NO = #{emp_no}
+	</select>
+	
+	<update id="updateEmpBasicinfo">
+		UPDATE STE100I
+		   SET EMP_NAME = #{emp_name}
+		     , AUTH_CLS_CODE = #{auth_cls_code}
+		     , EMP_STTS_CODE = #{emp_stts_code}
+		     , JOIN_DATE = (TO_CHAR(TO_DATE(TO_DATE( #{join_date} ,'YYYY-MM-DD')),'YYYYMMDD'))
+		     , RSGN_DATE = (TO_CHAR(TO_DATE(TO_DATE( #{rsgn_date} ,'YYYY-MM-DD')),'YYYYMMDD'))
+		     , RNK_CODE = #{rnk_code}
+		     , CNTCT_NO = #{cntct_no}
+		     , COMP_EMAIL = #{comp_email}
+		     , EMP_PHOT_CNTT = #{emp_phot_cntt}
+		     , EMP_ENG_NAME = #{emp_eng_name}
+		     , EMP_CHN_NAME = #{emp_chn_name}
+		     , BRTH_DATE = #{brth_date}
+		     , GNDR_CODE = #{gndr_code}
+		     , RSDN_REG_NO = #{rsdn_reg_no}
+		     , ZIP_CODE = #{zip_code}
+		     , HOME_ADDR = #{home_addr}
+		     , HOME_DTL_NO = #{home_dtl_no}
+		     , PSNL_EMAIL = #{psnl_email}
+		     , EMRG_CNTCT_NO = #{emrg_cntct_no}
+		     , MSVC_CLS_CODE = #{msvc_cls_code}
+		     , MSVC_STRT_DATE = #{msvc_strt_date}
+		     , MSVC_END_DATE = #{msvc_end_date}
+		     , MRRG_YN = #{mrrg_yn}
+		     , MRRG_DATE = #{mrrg_date}
+		 WHERE EMP_NO = #{emp_no}
+	</update>
+	
+	<insert id="joinNewMember">
+		INSERT INTO 
+	   STE100I(EMP_NO
+	         , EMP_NAME
+	         , PWD_NO)
+	    VALUES( #{emp_no}
+	          , #{emp_name}
+	          , #{passwd_no})
+	</insert>
+  
+</mapper>
+
+
+
