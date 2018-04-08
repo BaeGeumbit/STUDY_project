@@ -236,42 +236,38 @@
            AND APLY_END_DATE 
 	</select>
 
-
-	<insert id="insertDpt">
-		INSERT INTO STE101I
-		VALUES ( 
-		        #{emp_no}
-			  , #{dpt_code}
-		      , #{aply_strt_date}   
-		      , #{aply_end_date}
-			  , #{dpt_role_cls_code}
-			  , #{reg_emp_no}
-			  , SYSDATE
-			  , #{proc_emp_no}
-			  , SYSDATE
-		     )		
-	</insert>
-	
-	<delete id="delDpt">
-			DELETE
-	  FROM STE101I
-	 WHERE EMP_NO = #{emp_no}
-	   AND DPT_CODE = (SELECT DPT_CODE
-	          FROM STC003I
-	         WHERE 1 = 1
-	           AND DPT_NAME = #{dpt_name}
-	           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLY_STRT_DATE AND APLY_END_DATE )
-	</delete>
-
 	<update id="updateDpt">
-		UPDATE STE101I 
-		   SET APLY_STRT_DATE = #{aply_strt_date}  
-		     , APLY_END_DATE = #{aply_end_date}
-             , DPT_ROLE_CLS_CODE = #{dpt_role_cls_code}
-             , PROC_EMP_NO = #{proc_emp_no}
-             , PROC_DT = SYSDATE
-		 WHERE EMP_NO = #{emp_no}
-		   AND DPT_CODE = #{dpt_code}
+		MERGE INTO  STE101I 
+            USING ( SELECT COUNT(1) AS CNT
+                      FROM STE101I
+                     WHERE APLY_STRT_DATE = #{aply_strt_date}
+                       AND DPT_CODE = #{dpt_code}
+                       AND EMP_NO = #{emp_no}
+                  ) T
+            ON (
+                 T.CNT > 0
+               )
+            WHEN MATCHED THEN
+                      UPDATE SET
+                      APLY_END_DATE = TO_CHAR(SYSDATE, 'YYYYMMDD')
+                    , PROC_EMP_NO = #{proc_emp_no}
+                    , PROC_DT = SYSDATE          
+                    
+            WHEN NOT MATCHED THEN
+                      INSERT  VALUES (
+                           #{emp_no}
+                          , #{dpt_code}
+                          , #{aply_strt_date}
+                          , (SELECT APLY_END_DATE
+                              FROM STC003I
+                             WHERE DPT_CODE = #{dpt_code}
+                               AND APLY_STRT_DATE = #{aply_strt_date})
+                          , #{dpt_role_cls_code}
+                          , #{reg_emp_no}
+                          , SYSDATE
+                          , #{proc_emp_no}
+                          , SYSDATE
+                      )
 	</update>
 	
 </mapper>

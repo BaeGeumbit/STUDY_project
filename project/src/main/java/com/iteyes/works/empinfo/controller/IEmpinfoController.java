@@ -22,7 +22,7 @@ public interface IEmpinfoController {
 	public List<Map<String,String>> searchAddr(@RequestParam Map param);
 	
 	@RequestMapping(value="/empinfo/dpt", method=RequestMethod.GET)
-	public String dpt(Model model, @RequestParam("emp_no") String emp_no);
+	public String dpt(Model model, @RequestParam("dpt_name") String dpt_name);
 	
 	@RequestMapping("/dpt/search")
 	public Map<String, List<Map<String, ?>>> getDptinfo(@RequestParam Map<String, String> param);

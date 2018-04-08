@@ -66,7 +66,7 @@
 		<div class="col-xs-2 left">
 			<ul>
 				<li id="/emplist?page=1"><a href="#">사원 관리</a></li>
-				<li id="/skill"><a href="#">Skill Inventory</a></li>
+				<li id="/skillList"><a href="#">Skill Inventory</a></li>
 				<li id="/updatePasswd"><a href="#">비밀번호 변경</a></li>
 			</ul>
 		</div>

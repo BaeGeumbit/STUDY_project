@@ -13,6 +13,7 @@
 	
     <script type="text/javascript">	 
 		  function login(){
+			  
 			 var id = $('#id').val();
 			 var passwd = $('#passwd').val();
 			 
@@ -24,18 +25,15 @@
 			 }else{
 				 $.ajax({
 					method : "POST",
+					url : "/login/check",
 					data : {
 						"id" : id,
 						"passwd" : passwd
-					},
-					url : "/login/check",
+					},				
 					dataType : "text",
 					success : function(data){		
-						//alert()
 						if(data == 1){
-							loginfrm.action="/index";
-							loginfrm.method="post";
-							loginfrm.submit();
+							location.href="/index";
 						}else if(data == 2){
 							alert('비밀번호를 확인해주세요');
 						}else if(data == 3){
@@ -43,7 +41,9 @@
 						}
 					},
 					error : function(request,status,error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);	
+						alert( "code:"+request.status+"\n"
+							  +"message:"+request.responseText
+							  +"\n"+"error:"+error);	
 					}			
 				 });
 			 }
@@ -55,19 +55,19 @@
   <body>
 	  <div>
 	  	<div class="col-xs-4 col-xs-offset-4 loginbox">
-	  		<form id="loginfrm" name="loginfrm">
-	        <h2>ITeyes</h2>
-	        <div class="input-group">
-			    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-			    <input id="id" type="text" class="form-control" name="id" placeholder="아이디를 입력해주세요">
-			</div>
-			<div class="input-group">
-			    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-			    <input type="password" id="passwd" name="passwd" class="form-control" placeholder="패스워드를 입력해주세요"> 
-			</div>      
-			<br>
-			<button id="loginbt" class="btn btn-primary" onclick="login()">Login</button>	        
-	      </form>
+
+		        <h2>ITeyes</h2>
+		        <div class="input-group">
+				    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				    <input id="id" type="text" class="form-control" placeholder="아이디를 입력해주세요">
+				</div>
+				<div class="input-group">
+				    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+				    <input type="password" id="passwd"class="form-control" placeholder="패스워드를 입력해주세요"> 
+				</div>      
+				<br>
+				<button class="btn btn-primary" onclick="login()">Login</button>	        
+
 	  	</div>
 	  	<!-- .col-xs-4 col-xs-offset-4 loginbox -->
 	  </div>

@@ -66,12 +66,10 @@ public class EmpinfoService {
 				
 				list.add(map);
 				getCodeParam.put( groupCode.get(i).get("CODE_GRP_ID"), list);
-			}	
-			
+			}				
 		}
 
-		return getCodeParam;
-		
+		return getCodeParam;		
 	}
 	
 	
@@ -83,18 +81,38 @@ public class EmpinfoService {
 	}
 	
 	
-	public Map<String, List<Map<String, ?>>> getDpt(Map<String, String> param, String emp_no){
+	public Map<String, List<Map<String, ?>>> getDpt(Map<String, String> param){
 		
-		List<Map<String, ?>> dptlist = empinfoMapper.getDpt(param);
+		Map<String, String> dptParam = new HashMap<String, String>();
+	
+		if(param.get("searchDrop") != null && param.get("searchText") != null) {
+			if(param.get("searchDrop").equals("DPT_CODE")) {
+				dptParam.put("dpt_no", param.get("searchText"));
+				dptParam.put("dpt_name", "");
+				
+			}else if(param.get("searchDrop").equals("DPT_NAME")) {
+				dptParam.put("dpt_no", "");
+				dptParam.put("dpt_name", param.get("searchText"));
+				
+			}else {
+				dptParam.put("dpt_no", "");
+				dptParam.put("dpt_name", "");
+			}
+		}else {
+			dptParam.put("dpt_no", "");
+			dptParam.put("dpt_name", "");
+		}
 		
-		List<Map<String, ?>> empDptlist = empinfoMapper.getEmpDptinfo(emp_no);
+		List<Map<String, ?>> dptlist = empinfoMapper.getDpt(dptParam);
+		
+		//List<Map<String, ?>> empDptlist = empinfoMapper.getEmpDptinfo(emp_no);
 		
 		//List<Map<String, List<Map<String, ?>>>> list = new ArrayList<>();
 		
 		Map<String, List<Map<String, ?>>> map = new HashMap<>();
 		
 		map.put("dptlist", dptlist);
-		map.put("empDptlist", empDptlist);
+		//map.put("empDptlist", empDptlist);
 		
 		//list.add(map);
 		

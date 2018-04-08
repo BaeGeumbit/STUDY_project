@@ -110,6 +110,7 @@
 	         , HRNK_DPT_CODE                  /* 상위_부서_코드 */
 	         , SORT_SEQ_NO                    /* 정렬_순번 */
 	         , LAST_LEVL_YN                   /* 최하위_레벨_여부 */
+	         , APLY_STRT_DATE
 	      FROM STUDY.STC003I
 	     WHERE APLY_STRT_DATE <= TO_CHAR(SYSDATE, 'YYYYMMDD')
 	       AND APLY_END_DATE  >  TO_CHAR(SYSDATE, 'YYYYMMDD')
@@ -144,6 +145,7 @@
 		      , LEVEL AS LEVL_NO               /* 레벨_번호 */
 		      , SORT_SEQ_NO                    /* 정렬_순번 */
 		      , LAST_LEVL_YN                   /* 최하위_레벨_여부 */
+		      , APLY_STRT_DATE
 		   FROM T_HRCH
 		CONNECT BY PRIOR DPT_CODE = HRNK_DPT_CODE
 		  START WITH HRNK_DPT_CODE IS NULL

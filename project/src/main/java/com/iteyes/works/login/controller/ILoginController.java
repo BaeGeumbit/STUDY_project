@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 public interface ILoginController {
-
 	
 	@RequestMapping("/login")
 	public String login();
@@ -22,5 +21,8 @@ public interface ILoginController {
 	@RequestMapping("/logout")
 	@ResponseBody
 	public String logout(HttpSession session);
+	
+	@RequestMapping("/index")
+	public String index(Model model);
 	
 }

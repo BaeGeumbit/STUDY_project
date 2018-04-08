@@ -28,16 +28,15 @@ public class LoginController implements ILoginController {
 	
 	@Override
 	public @ResponseBody String logincheck(Model model, HttpSession session , @RequestParam Map param) {	
-		int logincheck = loginService.login(param);
 		
-		model.addAttribute("logincheck",logincheck);
-		
+		int logincheck = loginService.login(param);			
 		if(logincheck == 1) {
 			HashMap<String, String> map = loginService.selectSessionInfo((String)param.get("id"));
 			session.setAttribute("emp_no", map.get("EMP_NO"));
 			session.setAttribute("auth_code", map.get("AUTH_CLS_CODE"));
 			session.setAttribute("emp_name", map.get("EMP_NAME"));
 		}
+		model.addAttribute("logincheck",logincheck);
 		
 		return logincheck+"";
 	}
@@ -57,6 +56,12 @@ public class LoginController implements ILoginController {
 		}
 		
 		return result;
+	}
+	
+
+	@Override
+	public String index(Model model) {		
+		return "/index";
 	}
 
 }

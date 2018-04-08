@@ -1,5 +1,6 @@
 package com.iteyes.works.empinfo.controller;
 
+import java.net.URLDecoder;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,12 @@ public class UpdateEmpinfoController {
 	
 	@RequestMapping("/updateEmpinfo")
 	@ResponseBody
-	public String updateEmpinfo(@RequestParam Map<?, ?> param) throws Exception{
+	public String updateEmpinfo(@RequestParam Map<String, String> updateParam) throws Exception{
 	
-		updateService.updateEmpinfo(param);
-		
-		System.out.println("^^^^^^^*********");
-		System.out.println("^^^^^^^*********");
-		System.out.println("^^^^^^^*********");
-		
+		updateService.updateEmpinfo(updateParam);
 		
 		return null;
 	}
-	
 }
 
 

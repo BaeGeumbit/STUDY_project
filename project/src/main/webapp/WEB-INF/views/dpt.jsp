@@ -19,13 +19,19 @@
 			
 			$('#ok').click(function(){
 
-				var array = new Array();				
+				var array = new Array();
+				var array2 = new Array();
+				var array3 = new Array();
 				$('.check').each(function(i,t){
 					if( $(t).is(":checked") == true ){
 						array.push($(t).attr('name'));
+						array2.push($(t).attr('id'));
+						array3.push($(t).attr('value'));
 					}
 				});				
  				 $("#dpt_name", parent.opener.document).val(array);
+ 				 $("#dpt_code", parent.opener.document).val(array2);
+ 				 $("#dpt_strt_date", parent.opener.document).val(array3);
  			     window.close();
 			});
 
@@ -52,8 +58,7 @@
 					method : "POST",
 					data : {
 						"searchDrop" : $('#searchDrop').val(),
-						"searchText" : $('#searchText').val(),
-						"emp_no" : "${emp_no}"
+						"searchText" : $('#searchText').val()
 					},
 					url : "/dpt/search",
 					dataType : "json",
@@ -67,7 +72,7 @@
 							
 							str += "<ul id='"+data.dptlist[i].DPT_CODE+"' class='ul"+data.dptlist[i].DPT_CODE+"'>"
 							     + " <li name='"+data.dptlist[i].DPT_CODE+"' class='li"+data.dptlist[i].DPT_CODE+"'>"
-							     + "		<input type='checkbox' class='check' id='"+data.dptlist[i].DPT_CODE+"' name='"+data.dptlist[i].DPT_NAME+"'>&nbsp;&nbsp;&nbsp;"
+							     + "		<input type='checkbox' class='check' id='"+data.dptlist[i].DPT_CODE+"' value='"+data.dptlist[i].APLY_STRT_DATE+"' name='"+data.dptlist[i].DPT_NAME+"'>&nbsp;&nbsp;&nbsp;"
 							     +			data.dptlist[i].DPT_NAME_EXT
 							     + "<hr style='margin:7px;'/>"
 							     + " </li>"
@@ -78,11 +83,18 @@
 							}else{
 								$(str).appendTo('[name="'+data.dptlist[i].HRNK_DPT_CODE+'"]');
 							}							
-						} //for					
-											
-						for(var i=0; i<data.empDptlist.length; i++){							
-							$("input[id='"+data.empDptlist[i].DPT_CODE+"']").attr("checked", "checked");
-						}					
+						} //for		
+						
+						if("${dpt_name}" != null && "${dpt_name}" != ""){
+							var dptSplit = "${dpt_name}".split(",");
+							
+							for(var i in dptSplit){				
+								//alert(dptSplit[i]);	
+								var str = dptSplit[i];
+								$("input[name='"+dptSplit[i]+"']").attr("checked", "checked");
+							}	
+						}
+										
 					},
 					error : function(request,status,error){
 						alert('다시 한 번 입력해주세요 에러에러');									
